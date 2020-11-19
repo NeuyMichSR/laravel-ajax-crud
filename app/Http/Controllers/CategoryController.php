@@ -67,6 +67,11 @@ class CategoryController extends Controller
         }
     }
 
+    public function multiDelete(Request $request)
+    {
+
+    }
+
     protected function UploadImage(Request $request)
     {
         if ($request->hasFile('image')) {

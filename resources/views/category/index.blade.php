@@ -8,8 +8,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('bootstrap_4.1.3/css/bootstrap.min.css') }}" rel="stylesheet"> --}}
     <link href="{{ asset('css/sweetalert2.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/font-awesome/css/font-awesome.min.css') }}">
+    <style>
+        .dropdown-menu {
+            min-width: inherit !important;
+            padding: 0px;
+        }
+        .dropdown-menu .dropdown-item{
+            color: white;
+        }
+        #showImage img.my-image-show{
+            height: 150px !important;
+        }
+
+    </style>
 </head>
 
 <body>
@@ -39,6 +53,7 @@
     @include('category.inc.edit')
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    {{-- <script src="{{ asset('bootstrap_4.1.3/js/bootstrap.min.js') }}"></script> --}}
     <script src="{{ asset('js/jquery-3.5.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
@@ -133,6 +148,13 @@
             });
 
             // Edit data
+            function editImage() {
+                var img = document.createElement("IMG");
+                var imgv = $("#old_image").val();
+                var path_image = "upload/categories/";
+                img.src = path_image + imgv;
+                $('#showImage').html(img);
+            }
             $(document).on('click','.edit',function (e) {
                 e.preventDefault();
                 var id = $(this).data('id');
@@ -143,6 +165,10 @@
                     success: function (data) {
                         $("#frmEdit").find("#ename").val(data.name);
                         $("#frmEdit").find("#old_image").val(data.image);
+                        $("#frmEdit").find("#preview").hide();
+                        editImage();
+                        $("#frmEdit").find('#showImage img').addClass("my-image-show");
+                        $("#frmEdit").find('#showImage').show();
                         $("#frmEdit").find("#cat_id").val(data.id);
                         $("#EditCategoryModal").modal('show');
                     }
@@ -178,6 +204,37 @@
             });
         });
 
+        function updateImage() {
+            $("#frmEdit").find('#showImage img.my-image-show').hide();
+            $("#frmEdit").find("#eimage").click();
+            $("#frmEdit").find("#preview").show();
+        }
+        function getImage() {
+            $("#frmData").find("#image").click();
+        }
+        $('#image').change(function () {
+            var imgPath = this.value;
+            var ext = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+            if (ext == "gif" || ext == "png" || ext == "jpg" || ext == "jpeg")
+                readURL(this);
+            else
+                alert("Please select image file (jpg, jpeg, png).")
+        });
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.readAsDataURL(input.files[0]);
+                reader.onload = function (e) {
+                    $('#preview').attr('src', e.target.result);
+                };
+            // $("#remove").val(0);
+            }
+        }
+        function removeImage() {
+                //$('#preview').attr('src', '');
+            $('#preview').attr('src',"{{ asset('images/noimage.jpg') }}");
+            $("#remove").val(1);
+        }
     </script>
 </body>
 

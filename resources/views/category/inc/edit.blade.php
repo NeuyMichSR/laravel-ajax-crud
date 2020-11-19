@@ -16,11 +16,27 @@
                     <label for="name">Category Name:</label>
                     <input type="text" class="form-control" placeholder="Enter name" id="ename" name="name">
                 </div>
-                <div class="form-group">
+                {{-- <div class="form-group">
                     <label for="image">Image:</label>
                     <input type="file" class="form-control" id="eimage" name="image">
                     <input type="hidden" class="form-control" id="old_image" name="old_image">
                     <input type="hidden" class="form-control" id="cat_id" name="cat_id">
+                </div> --}}
+                <div class="form-group {{$errors->has('image') ? 'has-error' : ''}} text-center">
+                    <br>
+                    <div id="showImage"></div>
+                    <div id="showImageUpdate"></div>
+                    <img id="preview" src="{{ asset('images/noimage.jpg') }}" height="150px"/><br/>
+                    <input type="file" id="eimage" style="display: none;" name="image"  />
+                    <input type="hidden" class="form-control" id="old_image" name="old_image">
+                    <input type="hidden" class="form-control" id="cat_id" name="cat_id">
+                    <a href="javascript:updateImage()">Upload</a> |
+                    <a style="color: red" href="javascript:removeImage()" id="remove">Remove</a>
+                    @if ($errors->has('image'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('image') }}</strong>
+                    </span>
+                    @endif
                 </div>
         </div>
 
